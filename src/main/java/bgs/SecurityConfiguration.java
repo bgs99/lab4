@@ -32,11 +32,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .exceptionHandling()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/**").hasAuthority("USER")
+                .antMatchers("/api/**").hasAuthority("USER")
+                .antMatchers("/*", "*").permitAll()
                 .and()
                 .formLogin()
+                .loginPage("/login")
                 .and()
-                .logout();
+                .logout()
+                .logoutUrl("/logout");
     }
 
     @Autowired

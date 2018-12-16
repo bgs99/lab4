@@ -33,7 +33,7 @@
       send () {
         if(!this.valid)
           return false;
-        axios('/send', {
+        axios('/api/send', {
           params: {
             x: this.x,
             y: this.y,

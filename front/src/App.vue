@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="grid-root">
     <table>
       <colgroup>
         <col style="width: 10%;">
@@ -7,9 +7,9 @@
         <col style="width: 10%;">
       </colgroup>
       <tr>
-        <td>Гуляев Б.С., Полещук Ф. А.</td>
-        <td align="center">P3212</td>
-        <td>Вариант 938123</td>
+        <td><div id="names">Гуляев Б.С., Полещук Ф. А.</div></td>
+        <td align="center"><div id="group" align="center">P3212</div></td>
+        <td><div id="var">Вариант 938123</div></td>
       </tr>
     </table>
     <table>
@@ -31,7 +31,7 @@
           <Results :points="points"></Results>
         </td>
         <td style="vertical-align: top">
-          <Session @login="logged = true" @logout="logged = false"></Session>
+          <Session @login="login" @logout="logout"></Session>
         </td>
       </tr>
     </table>
@@ -57,7 +57,7 @@
   },
   methods: {
     send (x, y) {
-      axios('/send', {
+      axios('/api/send', {
         params: {
           x: x,
           y: y,
@@ -83,19 +83,24 @@
     },
     processClick (event) {
       this.send((event.offsetX-150)/100*this.r, (150-event.offsetY)/100*this.r);
-    }
-  },
-  beforeMount() {
-    axios('/fetch', {
-      params: {
-      },
-      method: 'GET'
-    }).then(response => {
-      this.points = response.data;
-    }).catch(error => {
+    },
+    login () {
+      axios('/api/fetch', {
+        params: {
+        },
+        method: 'GET'
+      }).then(response => {
+        this.points = response.data;
+      }).catch(error => {
+        this.points = [];
+        console.log(error)
+      });
+      this.logged = true;
+    },
+    logout () {
       this.points = [];
-      console.log(error)
-    })
+      this.logged = false;
+    }
   },
   data () {
     return {
@@ -108,5 +113,27 @@
 </script>
 
 <style>
-
+  .grid-root {
+    display: grid;
+    grid-template-columns: 10% 30% 40% 10% 10%;
+    grid-template-rows: 10% 90%;
+  }
+  .login {
+    grid-row: 2;
+  }
+  .login-right {
+    grid-column: 4/span 2;
+  }
+  .header {
+    grid-row: 1
+  }
+  #names {
+    grid-column: 1;
+  }
+  #group {
+    grid-column: 2;
+  }
+  #var {
+    grid-column: 3;
+  }
 </style>

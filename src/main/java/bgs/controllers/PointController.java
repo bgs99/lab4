@@ -18,14 +18,14 @@ public class PointController {
     @Autowired
     PointRepository points;
 
-    @RequestMapping("/fetch")
+    @RequestMapping("/api/fetch")
     public List<Point> fetchAll(){
         String session = SecurityContextHolder.getContext().getAuthentication().getName();
         return points.findAllBySession(session);
     }
 
-    @RequestMapping("/send")
-    public Point findPlace(@RequestParam("x") double x,
+    @RequestMapping("/api/send")
+    public Boolean findPlace(@RequestParam("x") double x,
                             @RequestParam("y") double y,
                             @RequestParam("r") double r){
         if(x < -2 || x > 2)
@@ -36,7 +36,7 @@ public class PointController {
             return null;
         Point p = new Point(x, y, r, SecurityContextHolder.getContext().getAuthentication().getName());
         points.save(p);
-        return p;
+        return p.isInside();
     }
 
 }

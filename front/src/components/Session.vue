@@ -6,8 +6,8 @@
       <br/>
       <input type="password" placeholder="******" v-model="password"/>
       <br/>
-      <input type="submit" value="Log in" @click="login"/>
-      <input type="submit" value="Register" @click="register"/>
+      <input type="submit" value="Log in"/>
+      <input type="button" value="Register" @click="register"/>
       <br/>
       <div v-if="!success" style="color: red">Cannot log in</div>
     </form>
@@ -56,9 +56,7 @@
           },
           method: 'POST'
         }).then(response => {
-          this.$emit('login');
-          this.logged = true;
-          this.success = true;
+          this.login();
         }).catch(error => {
           console.log(error)
         });

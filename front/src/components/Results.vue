@@ -35,7 +35,7 @@
             {{p.r}}
           </td>
           <td>
-            {{p.inside === 'true' ? 'inside' : 'outside'}}
+            {{p.inside? 'inside' : 'outside'}}
           </td>
         </tr>
       </tbody>

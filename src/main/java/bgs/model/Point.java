@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 @Entity
 public class Point implements Serializable {
-    @Id @GeneratedValue
+    @Id @GeneratedValue//"node build/build.js dev"
     private int id;
     private double x;
     private double y;
@@ -19,10 +19,16 @@ public class Point implements Serializable {
         this.y = y;
         this.r = r;
         this.session = session;
-        checkPoint();
+        this.inside = checkPoint();
     }
-    private void checkPoint(){
-        inside = false;
+    private boolean checkPoint(){
+        if(x > 0 && y > 0)
+            return false;
+        if(x >= 0 && y <= 0)
+            return y >= x-r/2;
+        if(x <= 0 && y >= 0)
+            return x*x +y*y < r*r;
+        return x > -r/2 && y > -r;
     }
 
     public double getY() {
