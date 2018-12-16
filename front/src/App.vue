@@ -1,40 +1,12 @@
 <template>
   <div class="grid-root">
-    <table>
-      <colgroup>
-        <col style="width: 10%;">
-        <col style="width: 80%;">
-        <col style="width: 10%;">
-      </colgroup>
-      <tr>
-        <td><div id="names">Гуляев Б.С., Полещук Ф. А.</div></td>
-        <td align="center"><div id="group" align="center">P3212</div></td>
-        <td><div id="var">Вариант 938123</div></td>
-      </tr>
-    </table>
-    <table>
-      <tr>
-        <td v-if="logged" >
-          <table>
-            <tr>
-              <td>
-                <Map :r="r" :points="points" @update:click="processClick"></Map>
-              </td>
-              <td>
-                <Controls :r="r" @update:r="r = $event" @update:points="points.unshift($event)"></Controls>
-              </td>
-              <td>
-              </td>
-            </tr>
-          </table>
-          <br/>
-          <Results :points="points"></Results>
-        </td>
-        <td style="vertical-align: top">
-          <Session @login="login" @logout="logout"></Session>
-        </td>
-      </tr>
-    </table>
+    <div style="grid-area: names">Гуляев Б.С., <br/> Полещук Ф. А.</div>
+    <div style="grid-area: group" align="center">P3212</div>
+    <div style="grid-area: var">Вариант 938123</div>
+    <Map style="grid-area: map; alignment: center" :r="r" :points="points" @update:click="processClick" v-if="logged"></Map>
+    <Controls style="grid-area: controls" :r="r" @update:r="r = $event" @update:points="points.unshift($event)" v-if="logged"></Controls>
+    <Results style="grid-area: results" :points="points" @removePoint="removePoint($event)" v-if="logged"></Results>
+    <Session v-bind:style="{ gridArea: logged ? 'session' : 'map'}" @login="login" @logout="logout"></Session>
   </div>
 </template>
 
@@ -65,17 +37,13 @@
         },
         method: 'POST'
       }).then(response => {
-        this.points.unshift({
-          x: x,
-          y: y,
-          r: this.r,
-          inside: response.data
-        });
+        this.points.unshift(response.data);
       }).catch(error => {
         this.points.unshift({
           x: x,
           y: y,
           r: this.r,
+          id: 0,
           inside: false
         });
         console.log(error)
@@ -100,13 +68,26 @@
     logout () {
       this.points = [];
       this.logged = false;
+    },
+    removePoint (id) {
+      console.log(id);
+      this.points = this.points.filter(q => q.id != id);
+      axios('/api/delete', {
+        params: {
+          id: id
+        },
+        method: 'POST'
+      }).then(response => {
+      }).catch(error => {
+        console.log(error)
+      });
     }
   },
   data () {
     return {
       r: 1,
       points: [],
-      logged: false
+      logged: false//TODO false
     }
   }
 }
@@ -115,25 +96,28 @@
 <style>
   .grid-root {
     display: grid;
-    grid-template-columns: 10% 30% 40% 10% 10%;
-    grid-template-rows: 10% 90%;
   }
-  .login {
-    grid-row: 2;
+  @media (min-width: 665px){
+    .grid-root {
+      grid-template-columns: max-content max-content auto max-content;
+      grid-template-rows: max-content max-content auto;
+      grid-template-areas:
+        "names    group   group     var"
+        "map      map     controls  session"
+        "results  results results   results";
+    }
   }
-  .login-right {
-    grid-column: 4/span 2;
-  }
-  .header {
-    grid-row: 1
-  }
-  #names {
-    grid-column: 1;
-  }
-  #group {
-    grid-column: 2;
-  }
-  #var {
-    grid-column: 3;
+
+  @media (max-width: 664px){
+    .grid-root {
+      grid-template-columns: max-content auto max-content;
+      grid-template-rows: max-content max-content max-content max-content auto;
+      grid-template-areas:
+        "names    group     var"
+        ".        .         session"
+        "map      map       map"
+        "controls controls  controls"
+        "results  results   results";
+    }
   }
 </style>

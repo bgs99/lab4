@@ -36,7 +36,7 @@
         });
       },
       logout () {
-        axios('/logout', {
+        axios('/login', {
           params: {
           },
           method: 'POST'

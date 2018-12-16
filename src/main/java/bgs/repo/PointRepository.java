@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface PointRepository extends CrudRepository<Point, Integer> {
     Point findById(int id);
-    List<Point> findAllBySession(String session);
+    List<Point> findAllByUsersession(String session);
+    void deleteAllByIdAndUsersession(int id, String session);
 }

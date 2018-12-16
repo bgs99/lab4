@@ -6,19 +6,21 @@ import java.io.Serializable;
 
 @Entity
 public class Point implements Serializable {
-    @Id @GeneratedValue//"node build/build.js dev"
+    @Id
+    @SequenceGenerator(name="SEQ_GEN", sequenceName="point_seq", allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_GEN")//"node build/build.js dev"
     private int id;
     private double x;
     private double y;
     private double r;
-    private String session;
+    private String usersession;
     private boolean inside;
-    protected Point(){};
+    protected Point(){}
     public Point(double x, double y, double r, String session){
         this.x = x;
         this.y = y;
         this.r = r;
-        this.session = session;
+        this.usersession = session;
         this.inside = checkPoint();
     }
     private boolean checkPoint(){
@@ -51,7 +53,7 @@ public class Point implements Serializable {
         return inside;
     }
 
-    public String getSession() {
-        return session;
+    public String getUsersession() {
+        return usersession;
     }
 }

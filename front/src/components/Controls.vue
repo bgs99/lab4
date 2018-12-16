@@ -41,17 +41,13 @@
           },
           method: 'POST'
         }).then(response => {
-          this.$emit('update:points', {
-            x: this.x,
-            y: this.y,
-            r: this.rt,
-            inside: response.data
-          });
+          this.$emit('update:points', response.data);
         }).catch(error => {
           this.$emit('update:points', {
             x: this.x,
             y: this.y,
             r: this.rt,
+            id: 0,
             inside: false
           });
           console.log(error)

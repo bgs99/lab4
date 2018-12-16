@@ -21,32 +21,23 @@
           <th>
             Result
           </th>
+          <th>
+            Delete
+          </th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="p in points">
-          <td>
-            {{p.x}}
-          </td>
-          <td>
-            {{p.y}}
-          </td>
-          <td>
-            {{p.r}}
-          </td>
-          <td>
-            {{p.inside? 'inside' : 'outside'}}
-          </td>
-        </tr>
+        <ResultRow v-for="p in points" :key="p.id" :point="p" @remove="$emit('removePoint', $event)"></ResultRow>
       </tbody>
     </table>
   </div>
 </template>
 
 <script>
-
+  import ResultRow from "./ResultRow";
   export default {
     name: 'Results',
+    components: {ResultRow},
     props: {
       points: {
         type: Array,
