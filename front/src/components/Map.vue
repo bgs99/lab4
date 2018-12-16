@@ -1,78 +1,55 @@
 <template>
-  <table>
-    <col width="80%">
-    <col width="20%">
-    <tr>
-      <td>
-        <img src="~@/assets/map.png" width="100%">
-      </td>
-      <td>
-        <div>Statistics</div>
-        <div>{{map.name}}</div>
-        Parent: <input type="button" v-if="map.parentId != null"
-                       :value="map.parentName" @click="load(map.parentId)">
-        <div>Danger: {{map.danger}}</div>
-        <input type="button" :value="'Population(' + map.population + ')'" @click="people">
-        <input type="button" :value="'Agents(' + map.cops + ')'">
-        <input type="button" :value="'Targets(' + map.targets + ')'">
-        <div>Units</div>
-        <div style="overflow: auto">
-          <input type="button" v-for="unit in map.units" :value="unit.second" @click="setCur(unit.first)" :key="unit.first">
-        </div>
-      </td>
-    </tr>
-  </table>
+  <div @click="$emit('update:click', $event)" style="width: 300px; height: 300px; display: block">
+    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="300" height="300">
+      <path d="M200,150 A50,50 0 0,1  150,200 L50,200 L50,150 L100,150 L150,100 L150,150 L200,150" fill="blue" fill-opacity="1"></path>
+      <line x1="150" y1="0" x2="150" y2="300" stroke="black" stroke-width="2"></line>
+      <line x1="0" y1="150" x2="300" y2="150" stroke="black" stroke-width="2"></line>
+
+      <line x1="140" y1="10" x2="150" y2="0" stroke="black" stroke-width="2"></line>
+      <line x1="160" y1="10" x2="150" y2="0" stroke="black" stroke-width="2"></line>
+
+      <line x1="290" y1="140" x2="300" y2="150" stroke="black" stroke-width="2"></line>
+      <line x1="290" y1="160" x2="300" y2="150" stroke="black" stroke-width="2"></line>
+      <circle v-for="p in points" :key="p.id" :cx="getX(p.x)" :cy="getY(p.y)"
+        r="3" :fill="getColor(inside)" ></circle>
+      <text x="200" y="150" fill="">{{r/2}}</text>
+      <text x="100" y="150" fill="">{{r/2}}</text>
+      <text x="150" y="100" fill="">{{r/2}}</text>
+      <text x="150" y="200" fill="">{{-r/2}}</text>
+      <text x="250" y="150" fill="">{{r}}</text>
+      <text x="50" y="150" fill="">{{-r}}</text>
+      <text x="150" y="50" fill="">{{r}}</text>
+      <text x="150" y="250" fill="">{{-r}}</text>
+      <rect x="0" y="0" width="300" height="300" opacity="0"></rect>
+    </svg>
+  </div>
 </template>
 
 <script>
-  import axios from 'axios'
-
   export default {
-  name: 'Map',
-  props: {
-    mid: {
-      type: Number,
-      default: 0
-    }
-  },
-  methods: {
-    setCur: function (val) {
-      this.cur = val;
-      this.load()
+    name: 'Map',
+    props: {
+      r: {
+        type: Number,
+        default: 1
+      },
+      points: {
+        type: Array,
+        default: []
+      }
     },
-    load: function () {
-      axios('/place', {
-        params: {
-          id: this.cur
-        },
-        method: 'GET'
-      }).then(response => {
-        this.map = response.data
-      }).catch(error => {
-        console.log(error)
-      })
-    },
-    people () {
-      this.$emit('people', this.cur)
-    }
-  },
-  beforeMount () {
-    this.cur = this.mid;
-    this.load()
-  },
-  data () {
-    return {
-      cur: 0,
-      map: {}
+    methods: {
+      getColor: function (inside) {
+        if (inside)
+          return "green";
+        else return "red";
+      },
+      getX(x) {
+        return 150 + x * 100 / this.r;
+      },
+      getY(y) {
+        return 150 - y * 100 / this.r;
+      }
     }
   }
-}
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-  input[type="button"] {
-    white-space: normal;
-    width: 90%;
-  }
-</style>

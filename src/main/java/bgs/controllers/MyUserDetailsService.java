@@ -1,7 +1,7 @@
 package bgs.controllers;
 
 import bgs.MyUserPrincipal;
-import bgs.model.Logins;
+import bgs.model.Login;
 import bgs.repo.LoginsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,7 +16,7 @@ public class MyUserDetailsService implements UserDetailsService {
     private LoginsRepository loginsRepository;
     @Override
     public UserDetails loadUserByUsername(String username) {
-        Logins user = null;
+        Login user = null;
         try {
             user = loginsRepository.findByName(username);
         }catch (Exception e){

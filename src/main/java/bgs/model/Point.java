@@ -14,7 +14,7 @@ public class Point implements Serializable {
     private String session;
     private boolean inside;
     protected Point(){};
-    public Point(double x, double y, int r, String session){
+    public Point(double x, double y, double r, String session){
         this.x = x;
         this.y = y;
         this.r = r;

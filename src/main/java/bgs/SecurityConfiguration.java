@@ -32,7 +32,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .exceptionHandling()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/main").hasAuthority("USER")
+                .antMatchers("/**").hasAuthority("USER")
                 .and()
                 .formLogin()
                 .and()

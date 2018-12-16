@@ -1,6 +1,6 @@
 package bgs;
 
-import bgs.model.Logins;
+import bgs.model.Login;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -12,7 +12,7 @@ public class MyUserPrincipal implements UserDetails {
     private String name;
     private String pass;
 
-    public MyUserPrincipal(Logins user) {
+    public MyUserPrincipal(Login user) {
         this.name = user.getName();
         this.pass = user.getPassword();
     }
